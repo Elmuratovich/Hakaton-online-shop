@@ -1,0 +1,229 @@
+﻿@model Project.Models.ViewModel.GetAllProductsViewModel
+@{
+}
+<div class="row" style="margin: 10px;">
+    <div class="col-lg-3">
+        @for (int i = 0; i < Model.Categories.Count; i++)
+        {
+        <div class="hov" style="background: #fff; margin: 5px; cursor: pointer;">
+            <div class="card-body"  onclick="getProducts(@Model.Categories[i].id)">
+                
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                Саны 10
+                            </div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800"> @Model.Categories[i].name</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-calendar fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+        </div>
+        }
+    </div>
+
+    <div class="col-lg-9">
+        <div >
+            <div class="container-fluid">
+
+                <!-- Page Heading -->
+                <h1 class="h3 mb-2 text-gray-800">Товары</h1>
+
+                <!-- DataTales Example -->
+                <div class="card shadow mb-4">
+                    <div class="card-header py-3">
+                        <h6 class="m-0 font-weight-bold text-primary">Товары по катергории</h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-bordered table-hover" id="dataTable" width="100%" cellspacing="0" style="cursor: pointer;">
+                                <thead>
+                                    <tr>
+                                        <th class="thImage">id</th>
+                                        <th>name</th>
+                                        <th>price</th>
+                                        <th>date</th>
+                                        @if (Model.role.Equals("Admin"))
+                                        { 
+                                            <td></td>
+                                        }
+                                        </tr>
+                                </thead>
+                             
+                                <tbody id="product">
+                                    @for (int i = 0; i < Model.ProductImages.Count(); i++)
+                                    {
+                                    <tr id="delp-@Model.ProductImages[i].id">
+                                        <td>
+                                            <div class="imgProduct">
+                                                <a href="/Home/Product/@Model.ProductImages[i].id">
+                                                    @if(Model.ProductImages[i].isImage = true)
+                                                    {
+                                                        <img src="~/Uploads/@Model.ProductImages[i].file_name" class="img-css" />
+                                                    }
+                                                    @if(Model.ProductImages[i].isImage == false)
+                                                    {
+                                                        <img src="~/lib/img/fut.jpg" class="img-css" />
+                                                    }
+                                                </a>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div>
+                                                <a href="/Home/Product/@Model.ProductImages[i].id">
+                                                    <b>@Model.ProductImages[i].name</b> <br />
+                                                    @Model.ProductImages[i].description
+                                                </a>
+                                            </div>
+                                        </td>
+                                        <td>@Model.ProductImages[i].price</td>
+                                        <td>@Model.ProductImages[i].created.ToString("dd/MM/yyyy")</td>
+                                        @if (Model.role.Equals("Admin")) {
+                                            <td>
+                                                <br />
+                                                <a href="#" data-toggle="modal" data-target="#form"><i class="fas fa-edit text-primary" aria-hidden="true" onclick="editProduct(@Model.Products[i].id)"></i></a><br /><br />
+                                                <a href="#"><i class="fa fa-trash text-danger" style="cursor: pointer;" onclick="deleteProduct(@Model.Products[i].id)"></i></a>
+                                            </td>
+                                        }
+                                        
+                                    </tr>
+
+                                    }
+
+
+                                </tbody>
+                            </table>
+                            <button class="btn btn-primary" type="button" onclick="addProduct()" data-toggle="modal" data-target="#forma">
+                                <i class="fa fa-plus"></i>
+                            </button>
+                            
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="form" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header border-bottom-0">
+                <h5 class="modal-title" id="exampleModalLabel">Изменить товар</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form action="Edit" method="POST">
+                <div class="modal-body" id="forms">
+                    
+                </div>
+                <div class="modal-footer border-top-0 d-flex justify-content-center">
+                    <button type="submit" class="btn btn-success" style="background: #4e73df;">Сохранить</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="forma" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header border-bottom-0">
+                <h5 class="modal-title" id="exampleModalLabel">Добавить товар</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form asp-action="AddProduct" method="POST" enctype="multipart/form-data" autocomplete="off">
+                <div class="modal-body" id="formas">
+
+                </div>
+                <div class="modal-footer border-top-0 d-flex justify-content-center">
+                    <button type="submit" class="btn btn-success" style="background: #4e73df;">Сохранить</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<style>
+    .imgProduct{
+        height: 120px;
+        width: 100px;
+    }
+
+    .thImage{
+        width: 110px;
+    }
+
+    .img-css{
+        height: 120px;
+        width: 110px;
+    }
+
+    table, th, td {
+        border: 1px solid black;
+        border-radius: 10px;
+    }
+
+    .table-hover tbody tr:hover td {
+        background: #f2f3f6;
+    }
+
+    tr{
+        border: 1px solid white;
+    }
+    .hov:hover{
+        background: #f2f3f6;
+    }
+</style>
+<script>
+    function getProducts(id) {
+        $("#product").html('');
+        var url = "/Home/GetProducts/" + id;
+        $.get(url, function (data) {
+            $("#product").html(data);
+
+        });
+    }
+
+    function editProduct(id) {
+        $("#forms").html('');
+        var url = "/Home/Edit/" + id;
+        $.get(url, function (data) {
+            $("#forms").html(data);
+
+        });
+    }
+
+    function deleteProduct(id) {
+        let text;
+        if (confirm("Press a button!") == true) {
+            $.ajax({
+                type: 'POST',
+                url: '/Home/DeleteProduct/',
+                data: { 'id': id },
+                success: function (data) {
+                    $('#delp-' + id).remove();
+                    $.alert('удален!');
+                }
+            });
+        } else {
+            text = "You canceled!";
+        }
+    }
+
+    function addProduct() {
+        $("#formas").html('');
+        var url = "/Home/AddProduct/";
+        $.get(url, function (data) {
+            $("#formas").html(data);
+
+        });
+    }
+ 
+</script>
