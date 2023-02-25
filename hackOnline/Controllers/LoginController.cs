@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Project.Models.Entity;
@@ -79,6 +80,13 @@ namespace hackOnline.Controllers
             ClaimsPrincipal principal = new ClaimsPrincipal(useridentity);
             await HttpContext.SignInAsync(principal);
             return RedirectToAction("Index", "Home");
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> LogOut()
+        {
+            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+            return RedirectToAction("Registration", "Login");
         }
     }
 }

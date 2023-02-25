@@ -412,3 +412,8 @@ D:\hackOnline\hackOnline\obj\Debug\netcoreapp3.1\Razor\Views\Login\Registration.
 D:\hackOnline\hackOnline\obj\Debug\netcoreapp3.1\Razor\Views\Home\saveComment.cshtml.g.cs
 D:\hackOnline\hackOnline\obj\Debug\netcoreapp3.1\Razor\Views\Home\Edit.cshtml.g.cs
 D:\hackOnline\hackOnline\obj\Debug\netcoreapp3.1\Razor\Views\Home\AddProduct.cshtml.g.cs
+D:\hackOnline\hackOnline\obj\Debug\netcoreapp3.1\Razor\Views\Home\Cart.cshtml.g.cs
+D:\hackOnline\hackOnline\obj\Debug\netcoreapp3.1\Razor\Views\Home\AddCategory.cshtml.g.cs
+D:\hackOnline\hackOnline\obj\Debug\netcoreapp3.1\Razor\Views\Home\About.cshtml.g.cs
+D:\hackOnline\hackOnline\obj\Debug\netcoreapp3.1\Razor\Views\Home\Favorites.cshtml.g.cs
+D:\hackOnline\hackOnline\obj\Debug\netcoreapp3.1\Razor\Views\Home\Zakaz.cshtml.g.cs

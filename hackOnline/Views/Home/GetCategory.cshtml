@@ -3,110 +3,134 @@
 }
 <div class="row" style="margin: 10px;">
     <div class="col-lg-3">
-        @for (int i = 0; i < Model.Categories.Count; i++)
-        {
-        <div class="hov" style="background: #fff; margin: 5px; cursor: pointer;">
-            <div class="card-body"  onclick="getProducts(@Model.Categories[i].id)">
-                
-                    <div class="row no-gutters align-items-center">
-                        <div class="col mr-2">
-                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
-                                Саны 10
+        <h1 class="h3 mb-2 text-gray-800">Категории</h1>
+        <div class="card shadow mb-4" style="position: static; overflow: scroll; height: 600px;">
+            <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-primary">
+                    Все категории
+                    @if (Model.role.Equals("Admin"))
+                    {
+                        <button class="btn btn-primary" type="button" onclick="addCategory()" data-toggle="modal" data-target="#forman" style="float: right;">
+                            <i class="fa fa-plus"></i>
+                        </button>
+                    }
+                </h6>
+            </div>
+            @for (int i = 0; i < Model.Categories.Count; i++)
+            {
+                <div class="hov" style="background: #fff; margin: 5px; cursor: pointer;" id="delCat-@Model.Categories[i].id">
+                    <div class="card-body" onclick="getProducts(@Model.Categories[i].id)">
+
+                        <div class="row no-gutters align-items-center">
+                            <div class="col mr-2">
+                                <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                    10 штук
+                                </div>
+                                <div class="h5 mb-0 font-weight-bold text-gray-800"> @Model.Categories[i].name</div>
                             </div>
-                            <div class="h5 mb-0 font-weight-bold text-gray-800"> @Model.Categories[i].name</div>
-                        </div>
-                        <div class="col-auto">
-                            <i class="fas fa-calendar fa-2x text-gray-300"></i>
+                            <div class="col-auto">
+                                @if (Model.role.Equals("Admin"))
+                                {
+                                    <a href="#"><i class="fa fa-trash text-danger" style="cursor: pointer;" onclick="deleteCategory(@Model.Categories[i].id)"></i></a>
+                                }
+                            </div>
                         </div>
                     </div>
                 </div>
+            }
         </div>
-        }
     </div>
 
-    <div class="col-lg-9">
-        <div >
-            <div class="container-fluid">
+        <div class="col-lg-9">
+            <div>
+                <div class="container-fluid">
 
-                <!-- Page Heading -->
-                <h1 class="h3 mb-2 text-gray-800">Товары</h1>
+                    <!-- Page Heading -->
+                    <h1 class="h3 mb-2 text-gray-800">Товары</h1>
 
-                <!-- DataTales Example -->
-                <div class="card shadow mb-4">
-                    <div class="card-header py-3">
-                        <h6 class="m-0 font-weight-bold text-primary">Товары по катергории</h6>
-                    </div>
-                    <div class="card-body">
-                        <div class="table-responsive">
-                            <table class="table table-bordered table-hover" id="dataTable" width="100%" cellspacing="0" style="cursor: pointer;">
-                                <thead>
-                                    <tr>
-                                        <th class="thImage">id</th>
-                                        <th>name</th>
-                                        <th>price</th>
-                                        <th>date</th>
-                                        @if (Model.role.Equals("Admin"))
-                                        { 
-                                            <td></td>
-                                        }
-                                        </tr>
-                                </thead>
-                             
-                                <tbody id="product">
-                                    @for (int i = 0; i < Model.ProductImages.Count(); i++)
-                                    {
-                                    <tr id="delp-@Model.ProductImages[i].id">
-                                        <td>
-                                            <div class="imgProduct">
-                                                <a href="/Home/Product/@Model.ProductImages[i].id">
-                                                    @if(Model.ProductImages[i].isImage = true)
-                                                    {
-                                                        <img src="~/Uploads/@Model.ProductImages[i].file_name" class="img-css" />
-                                                    }
-                                                    @if(Model.ProductImages[i].isImage == false)
-                                                    {
-                                                        <img src="~/lib/img/fut.jpg" class="img-css" />
-                                                    }
-                                                </a>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <div>
-                                                <a href="/Home/Product/@Model.ProductImages[i].id">
-                                                    <b>@Model.ProductImages[i].name</b> <br />
-                                                    @Model.ProductImages[i].description
-                                                </a>
-                                            </div>
-                                        </td>
-                                        <td>@Model.ProductImages[i].price</td>
-                                        <td>@Model.ProductImages[i].created.ToString("dd/MM/yyyy")</td>
-                                        @if (Model.role.Equals("Admin")) {
-                                            <td>
-                                                <br />
-                                                <a href="#" data-toggle="modal" data-target="#form"><i class="fas fa-edit text-primary" aria-hidden="true" onclick="editProduct(@Model.Products[i].id)"></i></a><br /><br />
-                                                <a href="#"><i class="fa fa-trash text-danger" style="cursor: pointer;" onclick="deleteProduct(@Model.Products[i].id)"></i></a>
-                                            </td>
-                                        }
-                                        
-                                    </tr>
-
-                                    }
-
-
-                                </tbody>
-                            </table>
-                            <button class="btn btn-primary" type="button" onclick="addProduct()" data-toggle="modal" data-target="#forma">
-                                <i class="fa fa-plus"></i>
-                            </button>
+                    <!-- DataTales Example -->
+                    <div class="card shadow mb-4">
+                        <div class="card-header py-3">
+                            <h6 class="m-0 font-weight-bold text-primary">
+                                Товары по категории @if (Model.role.Equals("Admin"))
+                                {
+                                <button class="btn btn-primary" type="button" onclick="addProduct()" data-toggle="modal" data-target="#forma" style="float: right;">
+                                    <i class="fa fa-plus"></i>
+                                </button>
+                                }
+                            </h6>
                             
                         </div>
-                    </div>
-                </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-bordered table-hover" id="dataTable" width="100%" cellspacing="0" style="cursor: pointer;">
+                                    <thead>
+                                        <tr>
+                                            <th class="thImage">id</th>
+                                            <th>name</th>
+                                            <th>price</th>
+                                            <th>date</th>
+                                            @if (Model.role.Equals("Admin"))
+                                            {
+                                                <td></td>
+                                            }
+                                        </tr>
+                                    </thead>
 
+                                    <tbody id="product">
+                                        @for (int i = 0; i < Model.ProductImages.Count(); i++)
+                                        {
+                                            <tr id="delp-@Model.ProductImages[i].id">
+                                                <td>
+                                                    <div class="imgProduct">
+                                                        <a href="/Home/Product/@Model.ProductImages[i].id">
+                                                            @if (Model.ProductImages[i].isImage = true)
+                                                            {
+                                                                <img src="~/Uploads/@Model.ProductImages[i].file_name" class="img-css" />
+                                                            }
+                                                            @if (Model.ProductImages[i].isImage == false)
+                                                            {
+                                                                <img src="~/lib/img/fut.jpg" class="img-css" />
+                                                            }
+                                                        </a>
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <div>
+                                                        <a href="/Home/Product/@Model.ProductImages[i].id">
+                                                            <b>@Model.ProductImages[i].name</b> <br />
+                                                            @Model.ProductImages[i].description
+                                                        </a>
+                                                    </div>
+                                                </td>
+                                                <td>@Model.ProductImages[i].price</td>
+                                                <td>@Model.ProductImages[i].created.ToString("dd/MM/yyyy")</td>
+                                                @if (Model.role.Equals("Admin"))
+                                                {
+                                                    <td>
+                                                        <br />
+                                                        <a href="#" data-toggle="modal" data-target="#form"><i class="fas fa-edit text-primary" aria-hidden="true" onclick="editProduct(@Model.Products[i].id)"></i></a><br /><br />
+                                                        <a href="#"><i class="fa fa-trash text-danger" style="cursor: pointer;" onclick="deleteProduct(@Model.Products[i].id)"></i></a>
+                                                    </td>
+                                                }
+
+                                            </tr>
+
+                                        }
+
+
+                                    </tbody>
+                                </table>
+                                
+
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
             </div>
         </div>
     </div>
-</div>
 
 <div class="modal fade" id="form" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
@@ -150,6 +174,30 @@
     </div>
 </div>
 
+
+<div class="modal fade" id="forman" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header border-bottom-0">
+                <h5 class="modal-title" id="exampleModalLabel">Добавить категорию</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form asp-action="AddCatecory" method="POST" enctype="multipart/form-data" autocomplete="off">
+                <div class="modal-body" id="formans">
+                    <div class="form-group">
+                        <label for="password1">Название</label>
+                        <input name="name" class="form-control">
+                    </div>
+                </div>
+                <div class="modal-footer border-top-0 d-flex justify-content-center">
+                    <button type="submit" class="btn btn-success" style="background: #4e73df;">Сохранить</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 <style>
     .imgProduct{
         height: 120px;
@@ -217,6 +265,23 @@
         }
     }
 
+    function deleteCategory(id) {
+        let text;
+        if (confirm("Press a button!") == true) {
+            $.ajax({
+                type: 'POST',
+                url: '/Home/DeleteCategory/',
+                data: { 'id': id },
+                success: function (data) {
+                    $('#delCat-' + id).remove();
+                    $.alert('удален!');
+                }
+            });
+        } else {
+            text = "You canceled!";
+        }
+    }
+
     function addProduct() {
         $("#formas").html('');
         var url = "/Home/AddProduct/";
@@ -225,5 +290,7 @@
 
         });
     }
+
+ 
  
 </script>

@@ -1,4 +1,5 @@
 ﻿using hackOnline.Models;
+using hackOnline.Models.Entity;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -26,11 +27,15 @@ namespace hackOnline.Controllers
         private readonly IGenericRepository<Comment> _commentRepository;
         private readonly IGenericRepository<UserRole> _userRoleRepository;
         private readonly IGenericRepository<Role> _rolRepository;
+        private readonly IGenericRepository<Cart> _cartRepository;
+        private readonly IGenericRepository<Favorites> _favoritesRepository;
+        private readonly IGenericRepository<Zakaz> _zakazRepository;
         private IHostingEnvironment Environment;
 
-        public HomeController(ILogger<HomeController> logger,IGenericRepository<Category> categoryRepository,
+        public HomeController(ILogger<HomeController> logger,IGenericRepository<Category> categoryRepository, IGenericRepository<Cart> cartRepository,
             IGenericRepository<User> userRepository, IGenericRepository<Product> productRepository, IGenericRepository<Category> ccategoryRepository, IGenericRepository<Image> imageRepository,
-            IGenericRepository<Comment> commentRepository, IGenericRepository<Role> rolRepository, IGenericRepository<UserRole> userRoleRepository, IHostingEnvironment _environment)
+            IGenericRepository<Comment> commentRepository, IGenericRepository<Role> rolRepository, IGenericRepository<UserRole> userRoleRepository, IHostingEnvironment _environment,
+            IGenericRepository<Favorites> favoritesRepository, IGenericRepository<Zakaz> zakazRepository)
         {
             _logger = logger;
             _userRepository = userRepository;
@@ -41,6 +46,9 @@ namespace hackOnline.Controllers
             _rolRepository = rolRepository;
             _userRoleRepository = userRoleRepository;
             Environment = _environment;
+            _cartRepository = cartRepository;
+            _favoritesRepository = favoritesRepository;
+            _zakazRepository = zakazRepository;
         }
 
         
@@ -334,6 +342,229 @@ namespace hackOnline.Controllers
             return RedirectToAction("GetCategory");
         }
 
+        public async Task<IActionResult> Cart(int id)
+        {
+            int userId = 0;
+            if (id > 0)
+            {
+                
+                var ids = User.Identity.Name;
+                if (ids != null)
+                {
+                    ApplicationContext c = new ApplicationContext();
+                    userId = c.users.Where(x => x.email == ids).Select(y => y.id).FirstOrDefault();
+
+                }
+
+                var cc = await _cartRepository.FindAll(t => t.UserId == userId && t.ProductId == id);
+                if(cc.Count == 0)
+                {
+                    var cart = new Cart()
+                    {
+                        UserId = userId,
+                        ProductId = id,
+                        RecordTimeStamp = DateTime.Now,
+                    };
+
+                    await _cartRepository.Insert(cart);
+                }
+                
+                var model = new CartProductViewModel();
+                var carts = await _cartRepository.FindAll(t => t.UserId == userId);
+                for (int i = 0; i < carts.Count; i++)
+                {
+                    var product = await _productRepository.SelectOne(id);
+                    model.Products.Add(product);
+                }
+                model.userId = userId;
+                return View(model);
+            }
+            else
+            {
+                var ids = User.Identity.Name;
+                if (ids != null)
+                {
+                    ApplicationContext c = new ApplicationContext();
+                    userId = c.users.Where(x => x.email == ids).Select(y => y.id).FirstOrDefault();
+
+                }
+                var model = new CartProductViewModel();
+                var carts = await _cartRepository.FindAll(t => t.UserId == userId);
+                for (int i = 0; i < carts.Count; i++)
+                {
+                    var product = await _productRepository.SelectOne(id);
+                    if(product != null)
+                    {
+                        model.Products.Add(product);
+                    }
+                    
+                }
+                model.userId = userId;
+                return View(model);
+            }
+            
+        }
+
+        public async Task<JsonResult> DeleteCartProduct(int id, int userId)
+        {
+            var cart = await _cartRepository.Find(t => t.ProductId == id && t.UserId == userId);
+            await _cartRepository.Delete(cart);
+
+            return Json(true);
+        }
+
+        public async Task<IActionResult> AddCategory()
+        {
+            var category = new Category();
+            return View(category);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> AddCatecory(Category category)
+        {
+            await _categoryRepository.Insert(category);
+            return RedirectToAction("GetCategory");
+        }
+
+        [HttpPost]
+        public async Task<JsonResult> DeleteCategory(int id)
+        {
+            var category = await _categoryRepository.SelectOne(id);
+            await _categoryRepository.Delete(category);
+            return Json(true);
+        }
+
+        [HttpPost]
+        public async Task<JsonResult> DeleteFavoritesProduct(int id, int userId)
+        {
+            var favorite = await _favoritesRepository.Find(t => t.productId == id && t.userId == userId);
+            await _favoritesRepository.Delete(favorite);
+            return Json(true);
+        }
+
+        public async Task<IActionResult> About()
+        {
+            return View();
+        }
+
+        public async Task<IActionResult> Favorites(int id)
+        {
+            int userId = 0;
+            if (id > 0)
+            {
+
+                var ids = User.Identity.Name;
+                if (ids != null)
+                {
+                    ApplicationContext c = new ApplicationContext();
+                    userId = c.users.Where(x => x.email == ids).Select(y => y.id).FirstOrDefault();
+
+                }
+
+                var fav = await _favoritesRepository.FindAll(t => t.userId == userId && t.productId == id);
+                if(fav.Count == 0)
+                {
+                    var favorites = new Favorites()
+                    {
+                        userId = userId,
+                        productId = id,
+                        RecordTimeStamp = DateTime.Now,
+                    };
+
+                    await _favoritesRepository.Insert(favorites);
+                }
+               
+                var model = new CartProductViewModel();
+                var favoritess = await _favoritesRepository.FindAll(t => t.userId == userId);
+                for (int i = 0; i < favoritess.Count; i++)
+                {
+                    var product = await _productRepository.SelectOne(id);
+                    model.Products.Add(product);
+                }
+                model.userId = userId;
+                return View(model);
+            }
+            else
+            {
+                var ids = User.Identity.Name;
+                if (ids != null)
+                {
+                    ApplicationContext c = new ApplicationContext();
+                    userId = c.users.Where(x => x.email == ids).Select(y => y.id).FirstOrDefault();
+
+                }
+                var model = new CartProductViewModel();
+                var favoritess = await _favoritesRepository.FindAll(t => t.userId == userId);
+                for (int i = 0; i < favoritess.Count; i++)
+                {
+                    var product = await _productRepository.SelectOne(id);
+                    if (product != null)
+                    {
+                        model.Products.Add(product);
+                    }
+
+                }
+                model.userId = userId;
+                return View(model);
+            }
+        }
+
+        public async Task<IActionResult> SaveZakazProduct(int id, int userId)
+        {
+            var cards = await _cartRepository.FindAll(t => t.ProductId == id && t.UserId == userId);
+            for(int i = 0; i < cards.Count; i++)
+            {
+                await _cartRepository.Delete(cards[i]);
+            }
+
+            var z = new Zakaz()
+            {
+                UserId = userId,
+                ProductId = id,
+                RecordTimeStamp = DateTime.Now
+            };
+        
+            await _zakazRepository.Insert(z);
+
+            return Json(true);
+        }
+
+        public async Task<IActionResult> Zakaz()
+        {
+            int userId = 0;
+            var ids = User.Identity.Name;
+                if (ids != null)
+                {
+                    ApplicationContext c = new ApplicationContext();
+                    userId = c.users.Where(x => x.email == ids).Select(y => y.id).FirstOrDefault();
+
+                }
+
+            var model = new CartProductViewModel();
+            var zakaz = await _zakazRepository.FindAll(t => t.UserId == userId);
+            for(int i = 0; i < zakaz.Count; i++)
+            {
+                var product = await _productRepository.SelectOne(zakaz[i].ProductId);
+                model.Products.Add(product);
+            }
+            model.userId = userId;
+            return View(model);
+        }
+
+        [HttpPost]
+        public async Task<JsonResult> DeleteZakazProduct(int id, int userId)
+        {
+            var zakazs = await _zakazRepository.FindAll(t => t.ProductId == id && t.UserId == userId);
+            if(zakazs.Count > 0)
+            {
+                for(int i = 0; i < zakazs.Count(); i++)
+                {
+                    await _zakazRepository.Delete(zakazs[i]);
+                }
+            }
+
+            return Json(true);
+        }
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {

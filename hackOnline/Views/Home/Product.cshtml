@@ -22,18 +22,26 @@
                     </div>
 
                     <!-- Basic Card Example -->
-                    <div class="card shadow mb-4">
-                        <div class="card-body">
-                            <button class="btn btn-primary" type="button">
-                                <i class="fa fa-heart"> Добавить в избранное</i>
-                            </button>
-                            <br>
-                            <br>
-                            <button class="btn btn-primary" type="button">
-                                <i class="fa fa-cart-plus"> Добавить в корзину</i>
-                            </button>
-                        </div>
-                    </div>
+                    @if (Model.role != null)
+                    {
+                        @if (Model.role.Equals("Admin"))
+                        {
+                            <div class="card shadow mb-4">
+                                <div class="card-body">
+                                    <a href="/Home/Favorites/@Model.productId" class="btn btn-primary" type="button" onclick="getFavorites()">
+                                        <i class="fa fa-heart"> Добавить в избранное</i>
+                                    </a>
+                                    <br>
+                                    <br>
+                                    <a href="/Home/Cart/@Model.productId" class="btn btn-primary" type="button">
+                                        <i class="fa fa-cart-plus"> Добавить в корзину</i>
+                                    </a>
+                                </div>
+                            </div>
+                        }
+                    }
+
+
                 </div>
 
                 <div class="col-lg-6">
@@ -89,12 +97,7 @@
                 </div>
 
             </div>
-            <button class="btn btn-primary" type="button">
-                <i class="fas fa-wrench"></i>
-            </button>
-            <button class="btn btn-primary" type="button">
-                <i class="fa fa-trash"></i>
-            </button>
+           
         </div>
     </div>
 </div>
@@ -132,5 +135,7 @@
         }
       
     }
+
+
 
 </script>

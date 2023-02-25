@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using hackOnline.Models.Entity;
+using Microsoft.EntityFrameworkCore;
 using Project.Models.Entity;
 using System;
 using System.Collections.Generic;
@@ -29,5 +30,8 @@ namespace Proje.Models
         public DbSet<Image> images { get; set; }
         public DbSet<Comment> comments { get; set; }
         public DbSet<Category> categories { get; set; }
+        public DbSet<Cart> carts { get; set; }
+        public DbSet<Favorites> favorites { get; set; }
+        public DbSet<Zakaz> zakaz { get; set; }
     }
 }

@@ -1,0 +1,61 @@
+﻿@model Project.Models.ViewModel.CartProductViewModel
+@{
+}
+
+<div class="container-fluid">
+
+    <!-- Page Heading -->
+    <h1 class="h3 mb-2 text-gray-800">Избранные</h1>
+
+    <!-- DataTales Example -->
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">Товары которые понравились вам</h6>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                @if (Model.Products.Count > 0)
+                {
+                    @for (int i = 0; i < Model.Products.Count; i++)
+                    {
+                        <div class="col-lg-12" id="deleteFav-@Model.Products[i].id">
+                            <div class="card shadow mb-4">
+                                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                                    <h6 class="m-0 font-weight-bold text-primary">@Model.Products[i].name</h6>
+                                    <i class="fa fa-trash text-danger" aria-hidden="true" onclick="deletFavorite(@Model.Products[i].id, @Model.userId)"></i>
+                                    <i class="fa fa-check" aria-hidden="true"></i>
+                                </div>
+                            </div>
+
+                        </div>
+                    }
+                }
+
+
+
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
+
+<script>
+    function deletFavorite(id, userId) {
+        let text;
+        if (confirm("Press a button!") == true) {
+            $.ajax({
+                type: 'POST',
+                url: '/Home/DeleteFavoritesProduct/',
+                data: { 'id': id, 'userId': userId },
+                success: function (data) {
+                    $('#deleteFav-' + id).remove();
+                    $.alert('удален!');
+                }
+            });
+        } else {
+            text = "You canceled!";
+        }
+    }
+</script>

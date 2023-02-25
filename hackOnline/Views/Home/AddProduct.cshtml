@@ -6,26 +6,26 @@
 
 <div class="form-group">
     <div class="form-group">
-        <label for="email1">Name</label>
+        <label for="email1">Название</label>
         <input type="text" asp-for="Product.name" class="form-control" aria-describedby="emailHelp" placeholder="Enter name">
         <small id="emailHelp" class="form-text text-muted">Your information is safe with us.</small>
     </div>
     <div class="form-group">
-        <label for="email1">Description</label>
+        <label for="email1">Описание</label>
         <input type="text" asp-for="Product.description" class="form-control" aria-describedby="emailHelp" placeholder="Enter name">
         <small id="Help" class="form-text text-muted">Your information is safe with us.</small>
     </div>
     <div class="form-group">
-        <label for="password1">Price</label>
+        <label for="password1">Цена</label>
         <input asp-for="Product.price" class="form-control">
     </div>
     <div class="form-group">
-        <label for="password1">Stock</label>
+        <label for="password1">Количество</label>
         <input asp-for="Product.stock" class="form-control">
     </div>
     <!-- Upload Area -->
     <div class="form-group">
-        <label asp-for="Photo" class="control-label">Image</label>
+        <label asp-for="Photo" class="control-label">Фото</label>
         <div class="drop-zone">
             <span class="drop-zone__prompt">Drop file here or click to upload</span>
             <input asp-for="Photo" class="drop-zone__input" accept="image/*">
@@ -33,7 +33,7 @@
     </div>
     <!-- End Upload Area -->
     <div class="form-group">
-        <label for="password1">Category</label>
+        <label for="password1">Категория</label>
         <select asp-for="Product.category">
             @for (int i = 0; i < Model.Categories.Count; i++)
             {

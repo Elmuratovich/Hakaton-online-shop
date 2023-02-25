@@ -1,3 +1,4 @@
+using hackOnline.Models.Entity;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -58,6 +59,9 @@ namespace hackOnline
             services.AddTransient<IGenericRepository<Category>, GenericRepository<Category>>();
             services.AddTransient<IGenericRepository<Image>, GenericRepository<Image>>();
             services.AddTransient<IGenericRepository<Comment>, GenericRepository<Comment>>();
+            services.AddTransient<IGenericRepository<Cart>, GenericRepository<Cart>>();
+            services.AddTransient<IGenericRepository<Favorites>, GenericRepository<Favorites>>();
+            services.AddTransient<IGenericRepository<Zakaz>, GenericRepository<Zakaz>>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
